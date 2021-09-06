@@ -4,6 +4,7 @@ import cv2
 import argparse
 import numpy as np
 
+
 def image_resize(image, width = None, height = None, inter = cv2.INTER_AREA): #mantain aspect ratio
     # initialize the dimensions of the image to be resized and
     # grab the image size
@@ -50,7 +51,7 @@ class ImageGenerator:
     def __init__(self, save_path):
         self.save_path = save_path
         # Plate
-        self.plate = cv2.imread("plate.jpg")
+        self.plate = cv2.imread("contorno.png")
         self.flag = cv2.imread("bandera.jpg")
         self.country = cv2.imread("peru.jpg")
         self.hyphen = cv2.imread("hyphen.jpg")
@@ -79,77 +80,74 @@ class ImageGenerator:
 
         #=========================================================================
 
-    def Type_2(self, num, save=False):
-        number = [cv2.resize(number, (45, 83)) for number in self.Number]
-        #char = [cv2.resize(char1, (49, 70)) for char1 in self.Char1]
-        char_n = [cv2.resize(char1, (45, 83)) for char1 in self.Char1]
-        hyphen = cv2.resize(self.hyphen, (30, 83))
-        Plate = cv2.resize(self.plate, (355, 155))
+    def Type_1(self, num, save=False):
+        number = [cv2.resize(number, (136, 320)) for number in self.Number]
+        char_n = [cv2.resize(char1, (136, 320)) for char1 in self.Char1]
+        hyphen = cv2.resize(self.hyphen, (80, 50))
+        Plate = self.plate
         Plate_dimensions = Plate.shape
 
-        Country = image_resize(self.country, height=30)
-        Country_dimensions = Country.shape
+        Country = cv2.resize(self.country, (380, 100))
 
         #Country = cv2.resize(self.country, (125, 35))
-        Flag = image_resize(self.flag, height=30)
-        Flag_dimensions = Flag.shape
+        Flag = cv2.resize(self.flag, (160, 100))
 
         for i, Iter in enumerate(range(num)):
-            Plate = cv2.resize(self.plate, (355, 155))
-            label = "Z"
-            row, col = 46, 30  # row + 83, col + 56
+            label = ""
+            row, col = 160, 60  # row + 83, col + 56
 
             # Place PERU name on top of the license
-            Plate[8:8+Country_dimensions[0], (Plate_dimensions[1]//2-Country_dimensions[1]//2):(Plate_dimensions[1]//2+Country_dimensions[1]//2) + 1, :] = Country
+            #Plate[8:8+Country_dimensions[0], (Plate_dimensions[1]//2-Country_dimensions[1]//2):(Plate_dimensions[1]//2+Country_dimensions[1]//2) + 1, :] = Country
+            Plate[36:36+100, 390:390+380, :] = Country
             # Place Flag on the top right
-            Plate[8:8+Flag_dimensions[0], 20:20+Flag_dimensions[1], :] = Flag
+            Plate[36:36+100, 30:30+160, :] = Flag
 
             # Char 1
             rand_int = random.randint(0, 9)
             label += self.char_list[rand_int]
-            Plate[row:row + 83, col:col + 45, :] = char_n[rand_int]
-            col += 45
+            Plate[row:row + 320, col:col + 136, :] = char_n[rand_int]
+            col += 156
 
             # number 2
             rand_int = random.randint(0, 9)
             label += self.char_list[rand_int]
-            Plate[row:row + 83, col:col + 45, :] = char_n[rand_int]
-            col += 45
+            Plate[row:row + 320, col:col + 136, :] = char_n[rand_int]
+            col += 156
 
             # number 3
             rand_int = random.randint(0, 9)
             label += self.char_list[rand_int]
-            Plate[row:row + 83, col:col + 45, :] = char_n[rand_int]
-            col += 45
+            Plate[row:row + 320, col:col + 136, :] = char_n[rand_int]
+            col += 156
 
-            Plate[row:row + 83, col:col + 30, :] = hyphen
-            col += 30
+            Plate[row+140:row + 190, col:col + 80, :] = hyphen
+            col += 100
 
             # number 4
             rand_int = random.randint(0, 9)
             label += self.number_list[rand_int]
-            Plate[row:row + 83, col + 2:col + 45 + 2, :] = number[rand_int]
-            col += 45
+            Plate[row:row + 320, col + 2:col + 136 + 2, :] = number[rand_int]
+            col += 156
 
             # number 5
             rand_int = random.randint(0, 9)
             label += self.number_list[rand_int]
-            Plate[row:row + 83, col:col + 45, :] = number[rand_int]
-            col += 45
+            Plate[row:row + 320, col:col + 136, :] = number[rand_int]
+            col += 156
 
             # number 6
             rand_int = random.randint(0, 9)
             label += self.number_list[rand_int]
-            Plate[row:row + 83, col:col + 45, :] = number[rand_int]
-            col += 45
+            Plate[row:row + 320, col:col + 136, :] = number[rand_int]
+            col += 156
 
-            Plate = random_bright(Plate)
+            #Plate = random_bright(Plate)
             if save:
-                cv2.imwrite(self.save_path + label + ".jpg", Plate)
-            else:
                 cv2.imshow(label, Plate)
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
+                cv2.imwrite(self.save_path + label + ".jpg", Plate)
+            #else:
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", "--img_dir", help="save image directory",
@@ -167,7 +165,7 @@ A = ImageGenerator(img_dir)
 num_img = args.num
 Save = args.save
 
-A.Type_2(num_img, save=Save)
+A.Type_1(num_img, save=Save)
 print("Type 1 finish")
 # A.Type_2(num_img, save=Save)
 # print("Type 2 finish")
