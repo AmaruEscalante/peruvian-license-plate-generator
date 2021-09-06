@@ -4,9 +4,9 @@ Python version used.
 $ python -v
 $ Python 3.9.5
 ```
-##Overview
+## Overview
 This project generates automatically a random Peruvian License Plate. Like the following.
-![](plates/AEF068.jpg)
+![](plates/ZHWE693.jpg)
 
 ## Usage
 1. Install the dependencies listed in requirements.txt in your environment
